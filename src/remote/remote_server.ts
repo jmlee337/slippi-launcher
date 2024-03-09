@@ -138,6 +138,15 @@ export class RemoteServer {
                 newConnection.sendUTF(JSON.stringify({ op: "spectate-broadcast-response", err }));
               }
             }
+            if (json.op === "close-dolphin-request") {
+              if (!json.dolphinId) {
+                newConnection.sendUTF(JSON.stringify({ op: "close-dolphin-response", err: "no dolphinId" }));
+                return;
+              }
+
+              this.dolphinManager.killPlaybackDolphin(json.dolphinId);
+              newConnection.sendUTF(JSON.stringify({ op: "close-dolphin-response" }));
+            }
           });
           newConnection.on("close", () => {
             this.connection = null;

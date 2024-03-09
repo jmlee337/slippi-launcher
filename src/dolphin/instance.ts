@@ -150,4 +150,10 @@ export class PlaybackDolphinInstance extends DolphinInstance {
       this.start(params);
     }
   }
+
+  public kill() {
+    if (this.process) {
+      this.process.kill("SIGTERM");
+    }
+  }
 }

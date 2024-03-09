@@ -118,6 +118,15 @@ export class DolphinManager {
     await playbackInstance.play(replayComm);
   }
 
+  public killPlaybackDolphin(id: string) {
+    const instance = this.playbackDolphinInstances.get(id);
+    if (!instance) {
+      throw new Error("no such playback dolphin instance");
+    }
+
+    instance.kill();
+  }
+
   public async launchNetplayDolphin() {
     Preconditions.checkState(this.netplayDolphinInstance == null, "Netplay dolphin is already open!");
 
