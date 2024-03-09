@@ -144,8 +144,13 @@ export class RemoteServer {
                 return;
               }
 
-              this.dolphinManager.killPlaybackDolphin(json.dolphinId);
-              newConnection.sendUTF(JSON.stringify({ op: "close-dolphin-response" }));
+              try {
+                this.dolphinManager.killPlaybackDolphin(json.dolphinId);
+                newConnection.sendUTF(JSON.stringify({ op: "close-dolphin-response" }));
+              } catch (e) {
+                const message = typeof e === "string" ? e : e instanceof Error ? e.message : "unknown";
+                newConnection.sendUTF(JSON.stringify({ op: "close-dolphin-response", err: message }));
+              }
             }
           });
           newConnection.on("close", () => {
