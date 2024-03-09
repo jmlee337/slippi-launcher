@@ -137,7 +137,7 @@ export default class RemoteServer {
         });
         this.httpServer!.listen(
           port,
-          "localhost", // bind only to localhost
+          "localhost", // bind only to localhost. Changing this to "0.0.0.0" will make the Spectate Remote Control server available via LAN.
           511, // default backlog queue length
           () => {
             this.httpServer!.removeAllListeners("error");
