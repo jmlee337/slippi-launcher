@@ -127,6 +127,12 @@ export class DolphinManager {
     instance.kill();
   }
 
+  public killAllPlaybackDolphins() {
+    for (const instance of this.playbackDolphinInstances.values()) {
+      instance.kill();
+    }
+  }
+
   public async launchNetplayDolphin() {
     Preconditions.checkState(this.netplayDolphinInstance == null, "Netplay dolphin is already open!");
 
