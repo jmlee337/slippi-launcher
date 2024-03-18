@@ -190,8 +190,7 @@ export default class RemoteServer {
                 const err = typeof e === "string" ? e : e instanceof Error ? e.message : "unknown";
                 newConnection.sendUTF(JSON.stringify({ op: "spectate-broadcast-response", err }));
               }
-            }
-            if (json.op === "close-dolphin-request") {
+            } else if (json.op === "close-dolphin-request") {
               if (!json.dolphinId) {
                 newConnection.sendUTF(JSON.stringify({ op: "close-dolphin-response", err: "no dolphinId" }));
                 return;
@@ -204,6 +203,9 @@ export default class RemoteServer {
                 const message = typeof e === "string" ? e : e instanceof Error ? e.message : "unknown";
                 newConnection.sendUTF(JSON.stringify({ op: "close-dolphin-response", err: message }));
               }
+            } else if (json.op === "close-all-dolphins-request") {
+              this.dolphinManager.killAllPlaybackDolphins();
+              newConnection.sendUTF(JSON.stringify({ op: "close-all-dolphins-response" }));
             }
           });
           newConnection.on("close", () => {
