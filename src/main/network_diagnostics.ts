@@ -1,7 +1,7 @@
 import type { PortMapping } from "@common/types";
 import { NatType, Presence } from "@common/types";
 import { createPmpClient, createUpnpClient } from "@xmcl/nat-api";
-import { gateway4async } from "default-gateway";
+import { v4DefaultGateway } from "network-default-gateway";
 import Tracer from "nodejs-traceroute";
 import { createServer, request } from "stun";
 
@@ -54,7 +54,7 @@ async function getPortMappingPresence(): Promise<PortMapping> {
     });
 
   let natpmpPresence = Presence.UNKNOWN;
-  const pmpClient = await createPmpClient((await gateway4async()).gateway);
+  const pmpClient = await createPmpClient((await v4DefaultGateway()).gateway);
   const pmpPromise = new Promise((resolve, reject) => {
     // library does not use a timeout for NAT-PMP, so we do it ourselves.
     const timeout = setTimeout(() => {
