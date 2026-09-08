@@ -14,16 +14,18 @@ export async function getNetworkDiagnostics(): Promise<{
   natType: NatType;
   portMapping: PortMapping;
 }> {
-  let address = "";
-  let natType = NatType.FAILED;
-  let portMapping = { upnp: Presence.FAILED, natpmp: Presence.FAILED };
+  const natTypePromise = getNatType().catch(() => ({ address: "", natType: NatType.FAILED }));
+  const portMappingPromise = getPortMappingPresence().catch(() => ({ upnp: Presence.FAILED, natpmp: Presence.FAILED }));
+  const { address, natType } = await natTypePromise;
+  const portMapping = await portMappingPromise;
+
   let cgnat = Presence.FAILED;
-  try {
-    portMapping = await getPortMappingPresence();
-    ({ address, natType } = await getNatType());
-    cgnat = await getCgnatPresence(address);
-  } catch (err) {
-    // just return what we have
+  if (address) {
+    try {
+      cgnat = await getCgnatPresence(address);
+    } catch (err) {
+      // just return what we have
+    }
   }
   return { address, cgnat, natType, portMapping };
 }
